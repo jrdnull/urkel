@@ -38,4 +38,13 @@ defmodule ParserTest do
 
     assert msg == Parser.parse(raw)
   end
+
+  test "to_string" do
+    raw = "PRIVMSG #elixir-lang :Hello, #elixir-lang!\r\n"
+    msg = %Message{command: "PRIVMSG",
+                   params: ["#elixir-lang"],
+                   trailing: "Hello, #elixir-lang!"}
+
+    assert raw == Parser.to_string(msg)
+  end
 end

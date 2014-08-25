@@ -1,6 +1,13 @@
 defmodule Urkel.Irc.Parser do
-	alias Urkel.Irc.Prefix, as: Prefix
-	alias Urkel.Irc.Message, as: Message
+  alias Urkel.Irc.Prefix, as: Prefix
+  alias Urkel.Irc.Message, as: Message
+
+  def to_string(msg) do
+    buf = if msg.prefix, do: ":#{msg.prefix} #{msg.command}", else: "#{msg.command}"
+    buf = if msg.params != [], do: "#{buf} #{Enum.join(msg.params," ")}", else: buf
+    buf = if msg.trailing, do: "#{buf} :#{msg.trailing}", else: buf
+    "#{buf}\r\n"
+  end
 
   def parse(raw) do
     no_crlf = String.replace(raw, "\r\n", "")
