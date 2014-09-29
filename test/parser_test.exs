@@ -25,9 +25,9 @@ defmodule ParserTest do
   test "SQUIT" do
     raw = ":Trillian SQUIT cm22.eng.umd.edu :Server out of control"
     msg = %Message{prefix: %Prefix{host: "Trillian"},
-                    command: "SQUIT",
-                    params: ["cm22.eng.umd.edu"],
-                    trailing: "Server out of control"}
+                   command: "SQUIT",
+                   params: ["cm22.eng.umd.edu"],
+                   trailing: "Server out of control"}
 
     assert msg == Parser.parse(raw)
   end
@@ -45,6 +45,6 @@ defmodule ParserTest do
                    params: ["#elixir-lang"],
                    trailing: "Hello, #elixir-lang!"}
 
-    assert raw == Parser.to_string(msg)
+    assert raw == Kernel.to_string(msg)
   end
 end

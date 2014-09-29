@@ -4,7 +4,7 @@ defmodule Urkel.Mixfile do
   def project do
     [app: :urkel,
      version: "0.0.1",
-     elixir: "~> 0.15.1",
+     elixir: "~> 1.0.0",
      deps: deps]
   end
 
@@ -12,7 +12,8 @@ defmodule Urkel.Mixfile do
   #
   # Type `mix help compile.app` for more information
   def application do
-    [applications: [:logger]]
+    [applications: [:logger],
+     mod: {Urkel, []}]
   end
 
   # Dependencies can be Hex packages:
@@ -25,6 +26,6 @@ defmodule Urkel.Mixfile do
   #
   # Type `mix help deps` for more examples and options
   defp deps do
-    [{:socket, "~> 0.2.7"}]
+    [{:socket, "~> 0.2.8"}]
   end
 end
