@@ -7,7 +7,7 @@ defmodule Urkel do
     import Supervisor.Spec
 
     children = [
-        worker(Urkel.Irc.Connection, [[Urkel.Plugin.Pong, Urkel.Plugin.Title]])
+        worker(Urkel.Irc.Connection, [[Urkel.Plugin.Pong, Urkel.Plugin.Admin, Urkel.Plugin.Title]])
     ]
 
     {:ok, _} = Supervisor.start_link(children, strategy: :one_for_one)
