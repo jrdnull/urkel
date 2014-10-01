@@ -14,4 +14,8 @@ defmodule Urkel.Irc do
       buf
     end
   end
+
+  def get_target(%Message{params: [param], prefix: %Prefix{nick: nick}}) do
+    if param |> String.at(0) == "#", do: param, else: nick
+  end
 end

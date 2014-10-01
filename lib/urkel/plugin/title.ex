@@ -1,26 +1,26 @@
 defmodule Urkel.Plugin.Title do
-  alias Urkel.Irc.Prefix, as: Prefix
-  alias Urkel.Irc.Message, as: Message
-  alias Urkel.Irc.Connection, as: Conn
+  alias Urkel.Irc, as: Irc
+  alias Irc.Message, as: Message
+  alias Irc.Connection, as: Conn
 
   require Logger
 
-  @url_re ~r/((https?:\/\/|www[.])[^\s()<>]+)/
-  @title_re ~r/<title>(.*?)<\/title>/i
+  @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/
+  @title_re ~r/<title>(.*?)<\/title>/is
 
   # TODO: don't reply to self
-  def handle(pid, %Message{command: "PRIVMSG", params: [target], trailing: msg}) do
-    case Regex.run(@url_re, msg, capture: :first) do
+  def handle(pid, msg = %Message{command: "PRIVMSG", trailing: text}) do
+    case Regex.run(@url_re, text, capture: :first) do
+      nil -> nil
       url ->
         Task.start_link fn ->
           case get_title(url) do
             nil ->
               Logger.info("[Title]: Failed to get title of #{url}")
             title ->
-              Conn.send(pid, %Message{command: "PRIVMSG", params: [target], trailing: title})
+              Conn.send(pid, %Message{command: "PRIVMSG", params: [msg |> Irc.get_target], trailing: title})
           end
         end
-      _ -> nil
     end
   end
 
@@ -34,7 +34,7 @@ defmodule Urkel.Plugin.Title do
     else
       case Regex.run(@title_re, resp.body, capture: :all_but_first) do
         nil -> nil
-        title -> "#{title} (#{url})"
+        [title | _] -> "#{title |> String.replace(~r/[\r\n\t]+/, " ")} (#{url})"
       end
     end
   end
