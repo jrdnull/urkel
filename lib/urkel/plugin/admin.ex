@@ -1,10 +1,14 @@
 defmodule Urkel.Plugin.Admin do
   use Urkel.Plugin.Mixin
 
-  def handle(pid, %Message{command: "PRIVMSG", trailing: msg, prefix: %Prefix{host: "C86A9EBA.D4828085.69B3A1C0.IP"}}) do
+  def handle(pid, msg = %Message{command: "PRIVMSG", trailing: text, prefix: %Prefix{host: "C86A9EBA.D4828085.69B3A1C0.IP"}}) do
     cond do
-      msg =~ ~r/^:join/ ->
-        Conn.send(pid, %Message{command: "JOIN", params: [String.split(msg, " ") |> List.last]})
+      text =~ ~r/^:join/ ->
+        join(pid, text |> String.split_at(6) |> elem(1))
+      text =~ ~r/^:part/ ->
+        part(pid, text |> String.split_at(6) |> elem(1))
+      text =~ ~r/^:echo/ ->
+        privmsg(pid, msg |> Irc.get_target, text |> String.split_at(6) |> elem(1))
       true -> nil
     end
   end

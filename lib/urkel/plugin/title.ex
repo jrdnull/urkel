@@ -1,13 +1,13 @@
 defmodule Urkel.Plugin.Title do
   use Urkel.Plugin.Mixin
 
-  @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/
+  @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/
   @title_re ~r/<title>(.*?)<\/title>/is
 
   def handle(pid, msg = %Message{command: "PRIVMSG", trailing: text}) do
     if url = text |> extract_url, do: Task.start_link fn ->
       if title = url |> get_title do
-        Conn.send(pid, %Message{command: "PRIVMSG", params: [msg |> Irc.get_target], trailing: title})
+        privmsg(pid, msg |> Irc.get_target, title)
       else
         Logger.info("[Title]: Failed to get title of #{url}")
       end
