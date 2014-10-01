@@ -26,7 +26,8 @@ defmodule Urkel.Plugin.Title do
     else
       case Regex.run(@title_re, resp.body, capture: :all_but_first) do
         nil -> nil
-        [title | _] -> "#{title |> String.replace(~r/[\r\n\t]+/, " ")} (#{url})"
+        [title | _] ->
+          "#{title |> String.replace(~r/[\r\n]+/, " ") |> String.strip} (#{url})"
       end
     end
   end
