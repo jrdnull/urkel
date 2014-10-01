@@ -1,9 +1,5 @@
 defmodule Urkel.Plugin.Title do
-  alias Urkel.Irc, as: Irc
-  alias Irc.Message, as: Message
-  alias Irc.Connection, as: Conn
-
-  require Logger
+  use Urkel.Plugin.Mixin
 
   @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/
   @title_re ~r/<title>(.*?)<\/title>/is

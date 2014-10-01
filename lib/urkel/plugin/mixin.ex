@@ -1,12 +1,12 @@
-defmodule Urkel.Irc.Plugin.Mixin do
+defmodule Urkel.Plugin.Mixin do
   defmacro __using__(_) do
-    quote location: keep do
-      def count(e) do
-        reduce(e, 0, fn (_, acc) -> acc + 1 end)
-      end
-      def member?(e, x) do
-        reduce(e, false, fn (v, acc) -> acc or x == v end)
-      end
+    quote do
+      alias Urkel.Irc, as: Irc
+      alias Irc.Prefix, as: Prefix
+      alias Irc.Message, as: Message
+      alias Irc.Connection, as: Conn
+
+      require Logger
     end
   end
 end
