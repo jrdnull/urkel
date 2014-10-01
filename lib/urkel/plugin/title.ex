@@ -8,23 +8,19 @@ defmodule Urkel.Plugin.Title do
   @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+\.?(:\d+)?(\/\S*)?)/
   @title_re ~r/<title>(.*?)<\/title>/is
 
-  # TODO: don't reply to self
   def handle(pid, msg = %Message{command: "PRIVMSG", trailing: text}) do
-    case Regex.run(@url_re, text, capture: :first) do
-      nil -> nil
-      url ->
-        Task.start_link fn ->
-          case get_title(url) do
-            nil ->
-              Logger.info("[Title]: Failed to get title of #{url}")
-            title ->
-              Conn.send(pid, %Message{command: "PRIVMSG", params: [msg |> Irc.get_target], trailing: title})
-          end
-        end
+    if url = text |> extract_url, do: Task.start_link fn ->
+      if title = url |> get_title do
+        Conn.send(pid, %Message{command: "PRIVMSG", params: [msg |> Irc.get_target], trailing: title})
+      else
+        Logger.info("[Title]: Failed to get title of #{url}")
+      end
     end
   end
 
   def handle(_, _), do: :nothing
+
+  defp extract_url(text), do: Regex.run(@url_re, text, capture: :first)
 
   defp get_title(url), do: get_title(url, 0)
   defp get_title(url, tries) do
