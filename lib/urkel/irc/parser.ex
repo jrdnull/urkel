@@ -2,9 +2,7 @@ defmodule Urkel.Irc.Parser do
   alias Urkel.Irc.Prefix, as: Prefix
   alias Urkel.Irc.Message, as: Message
 
-require Logger
   def parse(raw) do
-#Logger.warn(raw)
     no_crlf = String.replace(raw, "\r\n", "")
     %Message{prefix:   no_crlf |> extract_prefix,
              command:  no_crlf |> extract_command,

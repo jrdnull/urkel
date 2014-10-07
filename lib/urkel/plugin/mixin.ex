@@ -8,17 +8,14 @@ defmodule Urkel.Plugin.Mixin do
       alias Irc.Message, as: Message
       alias Irc.Connection, as: Conn
 
-      def join(pid, channel) do
-        Conn.send(pid, %Message{command: "JOIN", params: [channel]})
-      end
+      def join(pid, channel),
+      do: Conn.send(pid, %Message{command: "JOIN", params: [channel]})
 
-      def part(pid, channel) do
-        Conn.send(pid, %Message{command: "PART", params: [channel]})
-      end
+      def part(pid, channel),
+      do: Conn.send(pid, %Message{command: "PART", params: [channel]})
 
-      def privmsg(pid, target, text) do
-        Conn.send(pid, %Message{command: "PRIVMSG", params: [target], trailing: text})
-      end
+      def privmsg(pid, target, text),
+      do: Conn.send(pid, %Message{command: "PRIVMSG", params: [target], trailing: text})
     end
   end
 end

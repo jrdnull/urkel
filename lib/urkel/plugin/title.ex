@@ -4,6 +4,8 @@ defmodule Urkel.Plugin.Title do
   @url_re ~r/((https?:\/\/)?[\w-]+(\.[\w-]+)+(:\d+)?(\/\S*)?)/
   @title_re ~r/<title>(.*?)<\/title>/is
 
+  def init(_), do: :nothing
+
   def handle(pid, msg = %Message{command: "PRIVMSG", trailing: text}) do
     if url = text |> extract_url, do: Task.start_link fn ->
       if title = url |> get_title do

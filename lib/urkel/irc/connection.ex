@@ -18,6 +18,8 @@ defmodule Urkel.Irc.Connection do
     Self.send(pid, %Message{command: "USER", params: ["urkel", "0", "*"], trailing: "urkel"})
     Self.send(pid, %Message{command: "NICK", params: ["urkel"]})
 
+    for handler <- handlers, do: pid |> handler.init
+
     spawn_link(listen(pid, sock))
 
     {:ok, pid}

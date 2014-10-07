@@ -10,8 +10,8 @@ defmodule Urkel.Irc do
     def to_string(msg) do
       buf = if msg.prefix, do: ":#{msg.prefix} #{msg.command}", else: "#{msg.command}"
       buf = if msg.params != [], do: "#{buf} #{Enum.join(msg.params," ")}", else: buf
-      buf = if msg.trailing, do: "#{buf} :#{msg.trailing}", else: buf
-      buf
+
+      if msg.trailing, do: "#{buf} :#{msg.trailing}", else: buf
     end
   end
 
